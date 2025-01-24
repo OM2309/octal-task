@@ -16,8 +16,8 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { postApi } from "@/service/apiService";
-import { toast } from "sonner"; // For notifications
-import Link from "next/link"; // Import Link for navigation
+import { toast } from "sonner"; 
+import Link from "next/link"; 
 
 type RegisterFormInputs = {
   username: string;
@@ -53,7 +53,7 @@ const RegisterForm = ({
   });
 
   const onSubmit: SubmitHandler<RegisterFormInputs> = (data) => {
-    mutate(data); // Trigger the mutation
+    mutate(data);
     console.log("Form Values:", data);
   };
 
@@ -72,7 +72,7 @@ const RegisterForm = ({
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-6">
-              {/* Username Field */}
+           
               <div className="grid gap-2">
                 <Label htmlFor="username">Username</Label>
                 <Input
@@ -95,7 +95,7 @@ const RegisterForm = ({
                 )}
               </div>
 
-              {/* Email Field */}
+            
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
