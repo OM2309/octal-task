@@ -40,17 +40,17 @@ export function LoginForm() {
       toast.success("Login successful!");
     },
     onError: (error) => {
-      // Handle error and display a toast notification
+   
       const errorMessage =
         error?.response?.data?.message ||
         "Something went wrong. Please try again.";
-      toast.error(errorMessage); // Display error toast
+      toast.error(errorMessage); 
       console.error("Login error:", errorMessage);
     },
   });
 
   const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
-    mutate(data); // Trigger mutation
+    mutate(data); 
     console.log("Form Values:", data);
   };
 
