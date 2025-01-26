@@ -3,14 +3,18 @@ import userModel from "../models/user-model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-export const register = async (req, res) => {
-  const { username, email, password } = req.body;
-
-  if (!username || !email || !password) {
-    return sendResponse(res, 400, "Username, email, and password are required");
-  }
-
+export const register = async (req, res, next) => {
   try {
+    const { username, email, password } = req.body;
+
+    if (!username || !email || !password) {
+      return sendResponse(
+        res,
+        400,
+        "Username, email, and password are required"
+      );
+    }
+
     const existingUser = await userModel.findOne({ email });
 
     if (existingUser) {
@@ -33,22 +37,18 @@ export const register = async (req, res) => {
       email: savedUser.email,
     });
   } catch (error) {
-    return sendResponse(
-      res,
-      500,
-      "An error occurred while registering the user"
-    );
+    next(error);
   }
 };
 
-export const login = async (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    return sendResponse(res, 400, "Email and password are required");
-  }
-
+export const login = async (req, res, next) => {
   try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return sendResponse(res, 400, "Email and password are required");
+    }
+
     const existingUser = await userModel.findOne({ email });
 
     if (!existingUser) {
@@ -65,16 +65,33 @@ export const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      {
-        id: existingUser._id,
-      },
-      process.env.JWT_SECRET,
+      { id: existingUser._id },
+      process.env.JWT_SECRET_KEY,
       { expiresIn: "1h" }
     );
 
     return sendResponse(res, 200, "Login successful", { token });
   } catch (error) {
-    console.log(error.message);
-    return sendResponse(res, 500, "An error occurred during login");
+    next(error);
+  }
+};
+
+export const getUserById = async (req, res, next) => {
+  try {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return sendResponse(res, 400, "User ID is missing from the token");
+    }
+
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      return sendResponse(res, 404, "User not found");
+    }
+
+    return sendResponse(res, 200, "User fetched successfully", user);
+  } catch (error) {
+    next(error);
   }
 };

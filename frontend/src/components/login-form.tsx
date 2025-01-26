@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { cn } from "@/lib/utils";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,10 +24,7 @@ type LoginFormInputs = {
   password: string;
 };
 
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+export function LoginForm() {
   const {
     register,
     handleSubmit,
@@ -38,7 +35,7 @@ export function LoginForm({
 
   const { mutate } = useMutation({
     mutationKey: ["login"],
-    mutationFn: (data: LoginFormInputs) => postApi("/register", data),
+    mutationFn: (data: LoginFormInputs) => postApi("/login", data),
     onSuccess: (data) => {
       toast.success("Login successful!");
     },
@@ -58,7 +55,7 @@ export function LoginForm({
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={"flex flex-col gap-6"}>
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>

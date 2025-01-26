@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,8 +15,9 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { postApi } from "@/service/apiService";
-import { toast } from "sonner"; // For notifications
-import Link from "next/link"; // Import Link for navigation
+import { toast } from "sonner";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type RegisterFormInputs = {
   username: string;
@@ -25,10 +25,7 @@ type RegisterFormInputs = {
   password: string;
 };
 
-const RegisterForm = ({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) => {
+const RegisterForm = () => {
   const {
     register,
     handleSubmit,
@@ -36,12 +33,14 @@ const RegisterForm = ({
   } = useForm<RegisterFormInputs>();
 
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const { mutate } = useMutation({
     mutationKey: ["register"],
     mutationFn: (data: RegisterFormInputs) => postApi("/register", data),
     onSuccess: (data) => {
       toast.success("Registration successful!");
+      router.push("/");
     },
     onError: (error) => {
       const errorMessage =
@@ -58,7 +57,7 @@ const RegisterForm = ({
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className="flex justify-center items-center h-screen">
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Register</CardTitle>
